@@ -16,7 +16,7 @@ import com.example.demo.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/usuario")
+@RequestMapping("/")
 public class UsuarioController {
 
     @Autowired
@@ -25,6 +25,13 @@ public class UsuarioController {
     @Autowired
     private RolRepository rolRepo;
 
+    // Redireccion apenaz empieza
+    @GetMapping
+    public String root() {
+        return "redirect:/login";
+    }
+
+    // Formulario de login
     @GetMapping("/login")
     public String loginForm(Model model) {
         return "usuario/login";
@@ -37,14 +44,12 @@ public class UsuarioController {
                         Model model) {
 
         Usuario u = usuarioService.login(correo, contrasena);
-
         if (u == null) {
             model.addAttribute("error", "Credenciales incorrectas");
             return "usuario/login";
         }
-
         session.setAttribute("usuario", u);
-        return "redirect:/usuario/login";
+        return "redirect:/login"; 
     }
 
     @GetMapping("/register")
@@ -71,13 +76,12 @@ public class UsuarioController {
         u.setRol(rolCliente);
 
         usuarioService.registrar(u);
-
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 }
