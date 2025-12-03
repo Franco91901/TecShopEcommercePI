@@ -8,33 +8,45 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "usuario")
 public class Usuario {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idUsuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUsuario;
 
-	@ManyToOne
-	@JoinColumn(name = "rol_id")
-	private Rol rol;
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    private Rol rol;
 
-	@Column(nullable = false)
-	private String nombres;
+    @NotBlank(message = "Los nombres son obligatorios")
+    private String nombres;
 
-	@Column(nullable = false)
-	private String apellidos;
+    @NotBlank(message = "Los apellidos son obligatorios")
+    private String apellidos;
 
-	@Column(nullable = false, length = 8)
-	private String dni;
+    @NotBlank(message = "El DNI es obligatorio")
+    @Size(min = 8, max = 8, message = "El DNI debe tener exactamente 8 dígitos")
+    @Pattern(regexp = "\\d+", message = "El DNI debe contener solo números")
+    private String dni;
 
-	@Column(nullable = false, unique = true)
-	private String correo;
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "Debe ingresar un correo válido")
+    private String correo;
 
-	@Column(nullable = false)
-	private String contrasena;
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "La contraseña debe tener mínimo 6 caracteres")
+    @Pattern(
+        regexp = "^(?=(?:.*\\d){3,}).*$", 
+        message = "La contraseña debe contener al menos 3 números"
+    )
+    private String contrasena;
 
 	public Usuario() {
 	}
